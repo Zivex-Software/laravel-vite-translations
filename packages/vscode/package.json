@@ -1,0 +1,38 @@
+{
+  "name": "laravel-vite-translations-vscode",
+  "displayName": "Laravel Vite Translations",
+  "description": "VSCode extension for laravel-vite-translations: autocomplete, diagnostics, and go-to-definition for translation keys",
+  "version": "0.1.0",
+  "publisher": "laravel-vite-translations",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "workspaceContains:**/laravel-vite-translations"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "tsup src/extension.ts --format cjs --outDir dist --external vscode",
+    "dev": "tsup src/extension.ts --format cjs --outDir dist --external vscode --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "Laravel Vite Translations",
+      "properties": {
+        "laravelViteTranslations.generatedDir": {
+          "type": "string",
+          "default": "resources/js/i18n/generated",
+          "description": "Path to generated translation files"
+        }
+      }
+    }
+  }
+}
