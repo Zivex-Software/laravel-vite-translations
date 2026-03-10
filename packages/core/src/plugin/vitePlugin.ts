@@ -129,7 +129,8 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
       const namespaces = result ? extractNamespacesFromResult(result.code) : [];
       cache.set(id, code, namespaces);
 
-      return result;
+      if (!result) return null;
+      return { code: result.code, map: result.map as any };
     },
 
     buildEnd() {

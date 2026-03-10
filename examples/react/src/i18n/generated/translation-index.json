@@ -1,0 +1,42 @@
+{
+  "dashboard.title": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/react/lang/en/dashboard.php",
+    "locales": [
+      "en",
+      "nl"
+    ]
+  },
+  "dashboard.welcome": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/react/lang/en/dashboard.php",
+    "locales": [
+      "en",
+      "nl"
+    ]
+  },
+  "dashboard.stats.total": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/react/lang/en/dashboard.php",
+    "locales": [
+      "en",
+      "nl"
+    ]
+  },
+  "dashboard.stats.active": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/react/lang/en/dashboard.php",
+    "locales": [
+      "en",
+      "nl"
+    ]
+  },
+  "dashboard.stats.revenue": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/react/lang/en/dashboard.php",
+    "locales": [
+      "en",
+      "nl"
+    ]
+  }
+}

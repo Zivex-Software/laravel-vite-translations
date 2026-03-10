@@ -66,7 +66,7 @@ export type TranslateFunction = (key: string, params?: Record<string, string | n
 
 export interface TransformResult {
   code: string;
-  map?: object;
+  map?: { mappings: string; [key: string]: unknown } | null;
 }
 
 export interface CacheEntry {

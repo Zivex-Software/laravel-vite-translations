@@ -1,0 +1,37 @@
+{
+  "dashboard.title": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/svelte/lang/en/dashboard.php",
+    "locales": [
+      "en"
+    ]
+  },
+  "dashboard.welcome": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/svelte/lang/en/dashboard.php",
+    "locales": [
+      "en"
+    ]
+  },
+  "dashboard.stats.total": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/svelte/lang/en/dashboard.php",
+    "locales": [
+      "en"
+    ]
+  },
+  "dashboard.stats.active": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/svelte/lang/en/dashboard.php",
+    "locales": [
+      "en"
+    ]
+  },
+  "dashboard.stats.revenue": {
+    "namespace": "dashboard",
+    "file": "/Users/daanzieverink/Vite/Plugins/laravel-vite-translations/examples/svelte/lang/en/dashboard.php",
+    "locales": [
+      "en"
+    ]
+  }
+}

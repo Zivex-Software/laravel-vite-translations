@@ -1,0 +1,7 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome, :name!",
+  "stats.total": "Total Users",
+  "stats.active": "Active Users",
+  "stats.revenue": "Revenue"
+}
