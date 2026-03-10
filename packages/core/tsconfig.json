@@ -5,7 +5,7 @@
     "rootDir": "src",
     "jsx": "react-jsx",
     "paths": {
-      "laravel-vite-translations/*": ["./src/*"]
+      "@zivex/laravel-vite-translations/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

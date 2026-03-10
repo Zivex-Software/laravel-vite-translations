@@ -117,7 +117,7 @@ function patchViteConfig(root: string, framework: string): void {
   }
 
   // Add import
-  const importLine = `import translations from "laravel-vite-translations";\n`;
+  const importLine = `import translations from "@zivex/laravel-vite-translations";\n`;
   content = importLine + content;
 
   // Add to plugins array
@@ -131,14 +131,14 @@ function patchViteConfig(root: string, framework: string): void {
 }
 
 function generateRuntimeLoader(root: string, framework: string, locale: string): void {
-  const outDir = resolve(root, "resources/js/i18n");
+  const outDir = resolve(root, "resources/js/lang");
   mkdirSync(outDir, { recursive: true });
 
   let content: string;
 
   switch (framework) {
     case "react":
-      content = `import { createI18n } from "laravel-vite-translations/runtime";
+      content = `import { createI18n } from "@zivex/laravel-vite-translations/runtime";
 
 export const { t, setLocale, getLocale, onLocaleChange } = createI18n({
   locale: "${locale}",
@@ -148,7 +148,7 @@ export const { t, setLocale, getLocale, onLocaleChange } = createI18n({
       break;
 
     case "vue":
-      content = `import { createTranslationsPlugin } from "laravel-vite-translations/vue";
+      content = `import { createTranslationsPlugin } from "@zivex/laravel-vite-translations/vue";
 
 export const translationsPlugin = createTranslationsPlugin({
   locale: "${locale}",
@@ -158,7 +158,7 @@ export const translationsPlugin = createTranslationsPlugin({
       break;
 
     case "svelte":
-      content = `import { createTranslations } from "laravel-vite-translations/svelte";
+      content = `import { createTranslations } from "@zivex/laravel-vite-translations/svelte";
 
 export const { t, locale } = createTranslations({
   locale: "${locale}",
@@ -168,7 +168,7 @@ export const { t, locale } = createTranslations({
       break;
 
     default:
-      content = `import { createI18n } from "laravel-vite-translations/runtime";
+      content = `import { createI18n } from "@zivex/laravel-vite-translations/runtime";
 
 export const { t, setLocale, getLocale, onLocaleChange } = createI18n({
   locale: "${locale}",
@@ -179,5 +179,5 @@ export const { t, setLocale, getLocale, onLocaleChange } = createI18n({
 
   const outFile = join(outDir, "index.ts");
   writeFileSync(outFile, content, "utf-8");
-  logger.success(`Generated runtime loader at resources/js/i18n/index.ts`);
+  logger.success(`Generated runtime loader at resources/js/lang/index.ts`);
 }

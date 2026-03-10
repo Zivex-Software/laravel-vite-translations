@@ -1,12 +1,12 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import translations from "laravel-vite-translations";
+import translations from "@zivex/laravel-vite-translations";
 
 export default defineConfig({
   plugins: [
     ...translations({
       defaultLocale: "en",
-      outputDir: "src/i18n/generated",
+      outputDir: "src/lang/translations",
     }),
     vue(),
   ],

@@ -52,7 +52,7 @@ const validTranslationKey: Rule.RuleModule = {
     const options = context.options[0] || {};
     const indexPath = options.indexPath
       ? resolve(options.indexPath)
-      : resolve("resources/js/i18n/generated/translation-index.json");
+      : resolve("resources/js/lang/translations/translation-index.json");
     const checkLocales = options.checkLocales ?? false;
 
     const index = loadIndex(indexPath);

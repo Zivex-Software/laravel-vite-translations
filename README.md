@@ -46,9 +46,9 @@ This plugin bridges the gap. Write translations in PHP the Laravel way, and use 
 ### Install
 
 ```bash
-npm install laravel-vite-translations
+npm install @zivex/laravel-vite-translations
 # or
-pnpm add laravel-vite-translations
+pnpm add @zivex/laravel-vite-translations
 ```
 
 ### Add the Vite Plugin
@@ -56,7 +56,7 @@ pnpm add laravel-vite-translations
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import translations from "laravel-vite-translations";
+import translations from "@zivex/laravel-vite-translations";
 
 export default defineConfig({
   plugins: [
@@ -145,7 +145,7 @@ translations({
   langPaths: ["lang"],
 
   // Where to write generated JSON chunks
-  outputDir: "resources/js/i18n/generated",
+  outputDir: "resources/js/lang/translations",
 
   // Default locale for the transform
   defaultLocale: "en",
@@ -157,7 +157,7 @@ translations({
   generateTypes: true,
 
   // Where to write the .d.ts file
-  typesOutputPath: "resources/js/i18n/translations.d.ts",
+  typesOutputPath: "resources/js/lang/translations.d.ts",
 
   // Additional glob patterns for translation directories
   additionalPatterns: ["custom/*/lang/{locale}/*.php"],
@@ -172,7 +172,7 @@ translations({
 
 ```tsx
 // main.tsx
-import { TranslationProvider } from "laravel-vite-translations/react";
+import { TranslationProvider } from "@zivex/laravel-vite-translations/react";
 
 createRoot(document.getElementById("root")!).render(
   <TranslationProvider locale="en" fallbackLocale="en">
@@ -183,7 +183,7 @@ createRoot(document.getElementById("root")!).render(
 
 ```tsx
 // components/Dashboard.tsx
-import { useTranslations } from "laravel-vite-translations/react";
+import { useTranslations } from "@zivex/laravel-vite-translations/react";
 
 export function Dashboard() {
   const { t, locale, setLocale } = useTranslations();
@@ -206,7 +206,7 @@ The `useTranslations` hook uses `useSyncExternalStore` under the hood — locale
 ```ts
 // main.ts
 import { createApp } from "vue";
-import { createTranslationsPlugin } from "laravel-vite-translations/vue";
+import { createTranslationsPlugin } from "@zivex/laravel-vite-translations/vue";
 import App from "./App.vue";
 
 const app = createApp(App);
@@ -217,7 +217,7 @@ app.mount("#app");
 ```vue
 <!-- components/Dashboard.vue -->
 <script setup lang="ts">
-import { useTranslations } from "laravel-vite-translations/vue";
+import { useTranslations } from "@zivex/laravel-vite-translations/vue";
 
 const { t, locale, setLocale } = useTranslations();
 </script>
@@ -238,7 +238,7 @@ The Vue adapter uses `provide/inject` and reactive `ref` for locale tracking. `$
 ```svelte
 <!-- App.svelte -->
 <script lang="ts">
-  import { createTranslations } from "laravel-vite-translations/svelte";
+  import { createTranslations } from "@zivex/laravel-vite-translations/svelte";
 
   const { t, locale } = createTranslations({
     locale: "en",
@@ -262,7 +262,7 @@ The Svelte adapter exposes `t` as a derived store and `locale` as a writable sto
 For cases where you need the raw runtime without a framework adapter:
 
 ```ts
-import { createI18n } from "laravel-vite-translations/runtime";
+import { createI18n } from "@zivex/laravel-vite-translations/runtime";
 
 const { t, setLocale, getLocale, onLocaleChange } = createI18n({
   locale: "en",
@@ -329,7 +329,7 @@ npx laravel-vite-translations init
 
 - Detects your framework (React/Vue/Svelte) and lang directory
 - Patches `vite.config.ts` to add the plugin
-- Generates a runtime loader at `resources/js/i18n/index.ts`
+- Generates a runtime loader at `resources/js/lang/index.ts`
 - Prompts for locale and options interactively
 
 Options: `--locale <locale>`, `--framework <react|vue|svelte>`, `--lang-path <path>`, `--no-codemod`
@@ -379,7 +379,7 @@ npm install eslint --save-dev
 
 ```js
 // eslint.config.js
-import translations from "laravel-vite-translations/eslint";
+import translations from "@zivex/laravel-vite-translations/eslint";
 
 export default [
   translations.configs.recommended,
@@ -430,7 +430,7 @@ The extension reads the generated `translation-index.json` and watches for chang
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `laravelViteTranslations.generatedDir` | `resources/js/i18n/generated` | Path to generated translation files |
+| `laravelViteTranslations.generatedDir` | `resources/js/lang/translations` | Path to generated translation files |
 
 ---
 
@@ -440,7 +440,7 @@ The plugin generates a `.d.ts` file with a union type of all your translation ke
 
 ```ts
 // Auto-generated
-declare module "laravel-vite-translations/runtime" {
+declare module "@zivex/laravel-vite-translations/runtime" {
   export type TranslationKey =
     | "dashboard.title"
     | "dashboard.welcome"
@@ -501,7 +501,7 @@ Designed for large Laravel applications with hundreds of pages and thousands of 
 For critical above-the-fold content, preload translation chunks to avoid waterfalls:
 
 ```ts
-import { getPreloadLinks } from "laravel-vite-translations/preload";
+import { getPreloadLinks } from "@zivex/laravel-vite-translations/preload";
 
 // In your SSR template or HTML
 const links = getPreloadLinks(["dashboard", "nav"], "en");
@@ -515,13 +515,54 @@ const links = getPreloadLinks(["dashboard", "nav"], "en");
 
 | Path | Description |
 |---|---|
-| `laravel-vite-translations` | Vite plugin |
-| `laravel-vite-translations/runtime` | Runtime API (`createI18n`, `t`) |
-| `laravel-vite-translations/react` | React adapter (`TranslationProvider`, `useTranslations`) |
-| `laravel-vite-translations/vue` | Vue adapter (`createTranslationsPlugin`, `useTranslations`) |
-| `laravel-vite-translations/svelte` | Svelte adapter (`createTranslations`) |
-| `laravel-vite-translations/eslint` | ESLint plugin |
-| `laravel-vite-translations/preload` | SSR preload utilities |
+| `@zivex/laravel-vite-translations` | Vite plugin |
+| `@zivex/laravel-vite-translations/runtime` | Runtime API (`createI18n`, `t`) |
+| `@zivex/laravel-vite-translations/react` | React adapter (`TranslationProvider`, `useTranslations`) |
+| `@zivex/laravel-vite-translations/vue` | Vue adapter (`createTranslationsPlugin`, `useTranslations`) |
+| `@zivex/laravel-vite-translations/svelte` | Svelte adapter (`createTranslations`) |
+| `@zivex/laravel-vite-translations/eslint` | ESLint plugin |
+| `@zivex/laravel-vite-translations/preload` | SSR preload utilities |
+
+---
+
+## Release
+
+### Local release commands
+
+Publish the npm package:
+
+```bash
+pnpm release:npm
+```
+
+Publish the VS Code extension:
+
+```bash
+pnpm release:vscode
+```
+
+Run the full release flow in one command:
+
+```bash
+pnpm release:all
+```
+
+Package the VS Code extension locally without publishing:
+
+```bash
+pnpm release:vscode:package
+```
+
+### GitHub Actions release
+
+A manual workflow is included at `.github/workflows/release.yml`.
+
+Required repository secrets:
+
+- `NPM_TOKEN` for publishing `@zivex/laravel-vite-translations`
+- `VSCE_PAT` for publishing the VS Code extension
+
+If you want the npm package to stay under `@zivex`, the npm scope `zivex` must exist and your npm account must have publish access to it.
 
 ---
 

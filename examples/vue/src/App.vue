@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTranslations } from "laravel-vite-translations/vue";
+import { useTranslations } from "@zivex/laravel-vite-translations/vue";
 
 const { t, locale, setLocale } = useTranslations();
 </script>

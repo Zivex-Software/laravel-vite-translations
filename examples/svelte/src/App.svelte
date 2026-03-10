@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createTranslations } from "laravel-vite-translations/svelte";
+  import { createTranslations } from "@zivex/laravel-vite-translations/svelte";
 
   const { t, locale } = createTranslations({
     locale: "en",

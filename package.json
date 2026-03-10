@@ -7,7 +7,11 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "release:npm": "pnpm --dir packages/core publish",
+    "release:vscode": "pnpm --dir packages/vscode exec vsce publish",
+    "release:vscode:package": "pnpm --dir packages/vscode exec vsce package",
+    "release:all": "pnpm build && pnpm release:npm && pnpm release:vscode"
   },
   "devDependencies": {
     "turbo": "^2.3.0",

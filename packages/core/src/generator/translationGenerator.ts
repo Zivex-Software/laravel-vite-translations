@@ -17,7 +17,7 @@ export async function generateTranslations(
   scanResult: ScanResult,
   options: PluginOptions
 ): Promise<GenerationResult> {
-  const outputDir = options.outputDir || "resources/js/i18n/generated";
+  const outputDir = options.outputDir || "resources/js/lang/translations";
   const index: TranslationIndex = {};
   let filesWritten = 0;
 
@@ -70,7 +70,7 @@ export async function generateTranslations(
 
   // Generate TypeScript types if enabled
   if (options.generateTypes !== false) {
-    const typesPath = options.typesOutputPath || "resources/js/i18n/translations.d.ts";
+    const typesPath = options.typesOutputPath || "resources/js/lang/translations.d.ts";
     const typesDir = join(typesPath, "..");
     await mkdir(typesDir, { recursive: true });
     const declaration = generateTypeDeclaration(index);

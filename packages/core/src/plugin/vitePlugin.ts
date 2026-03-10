@@ -13,7 +13,7 @@ const RESOLVED_PREFIX = "\0virtual:lvt/";
 
 export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
   const defaultLocale = options.defaultLocale || "en";
-  const outputDir = options.outputDir || "resources/js/i18n/generated";
+  const outputDir = options.outputDir || "resources/js/lang/translations";
   let root: string;
   let cache: TransformCacheManager;
 
@@ -87,7 +87,7 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
       try {
         const content = readFileSync(jsonPath, "utf-8");
         return `
-          import { __registerTranslations } from "laravel-vite-translations/runtime";
+          import { __registerTranslations } from "@zivex/laravel-vite-translations/runtime";
           __registerTranslations("${namespace}", "${locale}", ${content});
         `;
       } catch {

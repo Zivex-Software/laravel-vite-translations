@@ -1,5 +1,5 @@
 {
-  "name": "laravel-vite-translations",
+  "name": "@zivex/laravel-vite-translations",
   "version": "0.1.0",
   "description": "Vite plugin for Laravel PHP translation files with runtime loading, namespace chunking, and framework adapters",
   "type": "module",
@@ -45,6 +45,9 @@
   "types": "./dist/index.d.ts",
   "bin": {
     "laravel-vite-translations": "./bin/cli.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": ["dist", "bin"],
   "scripts": {

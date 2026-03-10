@@ -7,7 +7,9 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [
     "workspaceContains:**/laravel-vite-translations"
   ],
@@ -16,10 +18,13 @@
     "build": "tsup src/extension.ts --format cjs --outDir dist --external vscode",
     "dev": "tsup src/extension.ts --format cjs --outDir dist --external vscode --watch",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "package:vsix": "vsce package",
+    "publish:marketplace": "vsce publish"
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.7.1",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0"
   },
@@ -29,7 +34,7 @@
       "properties": {
         "laravelViteTranslations.generatedDir": {
           "type": "string",
-          "default": "resources/js/i18n/generated",
+          "default": "resources/js/lang/translations",
           "description": "Path to generated translation files"
         }
       }

@@ -19,7 +19,7 @@ export class TranslationIndexManager {
     const config = vscode.workspace.getConfiguration("laravelViteTranslations");
     this.generatedDir = path.resolve(
       workspaceRoot,
-      config.get("generatedDir", "resources/js/i18n/generated")
+      config.get("generatedDir", "resources/js/lang/translations")
     );
   }
 

@@ -1,4 +1,5 @@
-import { TranslationProvider, useTranslations } from "laravel-vite-translations/react";
+import React from "react";
+import { TranslationProvider, useTranslations } from "@zivex/laravel-vite-translations/react";
 
 function Dashboard() {
   const { t, locale, setLocale } = useTranslations();

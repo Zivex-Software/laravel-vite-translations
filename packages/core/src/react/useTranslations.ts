@@ -14,7 +14,7 @@ export function useTranslations(): UseTranslationsReturn {
   if (!i18n) {
     throw new Error(
       "useTranslations must be used within a <TranslationProvider>. " +
-        "Wrap your app with <TranslationProvider> from 'laravel-vite-translations/react'."
+        "Wrap your app with <TranslationProvider> from '@zivex/laravel-vite-translations/react'."
     );
   }
 
