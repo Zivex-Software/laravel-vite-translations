@@ -1,6 +1,6 @@
 {
   "name": "@zivex/laravel-vite-translations",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Vite plugin for Laravel PHP translation files with runtime loading, namespace chunking, and framework adapters",
   "type": "module",
   "exports": {

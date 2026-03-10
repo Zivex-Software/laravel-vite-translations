@@ -2,7 +2,7 @@
   "name": "laravel-vite-translations-vscode",
   "displayName": "Laravel Vite Translations",
   "description": "VSCode extension for laravel-vite-translations: autocomplete, diagnostics, and go-to-definition for translation keys",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "laravel-vite-translations",
   "engines": {
     "vscode": "^1.85.0"
