@@ -69,11 +69,15 @@ function transformFile(code: string, filePath: string): TransformFileResult | nu
 
   let ast: any;
   try {
-    ast = parseSync(scriptContent, {
-      syntax: isTs
-        ? { syntax: "typescript", tsx: isTsx || isVueOrSvelte }
-        : { syntax: "ecmascript", jsx: isTsx },
-    });
+    ast = isTs
+      ? parseSync(scriptContent, {
+          syntax: "typescript",
+          tsx: isTsx || isVueOrSvelte,
+        })
+      : parseSync(scriptContent, {
+          syntax: "ecmascript",
+          jsx: isTsx,
+        });
   } catch {
     return null;
   }

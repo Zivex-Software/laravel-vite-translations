@@ -18,6 +18,12 @@ program
   .option("-l, --locale <locale>", "Default locale", "en")
   .option("-f, --framework <framework>", "Frontend framework (react|vue|svelte)")
   .option("--lang-path <path>", "Path to lang directory")
+  .option(
+    "--package-manager <packageManager>",
+    "Package manager (auto|bun|pnpm|npm|yarn)",
+    "auto"
+  )
+  .option("--runtime <runtime>", "Runtime (auto|bun|node)", "auto")
   .option("--no-codemod", "Skip running codemod after init")
   .action(initCommand);
 

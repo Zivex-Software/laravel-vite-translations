@@ -49,6 +49,8 @@ This plugin bridges the gap. Write translations in PHP the Laravel way, and use 
 npm install @zivex/laravel-vite-translations
 # or
 pnpm add @zivex/laravel-vite-translations
+# or
+bun add @zivex/laravel-vite-translations
 ```
 
 ### Add the Vite Plugin
@@ -60,13 +62,18 @@ import translations from "@zivex/laravel-vite-translations";
 
 export default defineConfig({
   plugins: [
-    ...translations({
+    translations({
       defaultLocale: "en",
+      // Optional: override auto-detected tooling
+      packageManager: "bun",
+      runtime: "bun",
     }),
     // ... your framework plugin (react/vue/svelte)
   ],
 });
 ```
+
+Package manager and runtime are auto-detected from `package.json`, lockfiles, the current user agent, and Bun runtime signals. Only set `packageManager` or `runtime` when you want to override detection manually.
 
 ### Write Translations in PHP (the Laravel way)
 
@@ -121,7 +128,7 @@ lang/nl/dashboard.php ─────┤
                    │  SWC Transform  │  Finds t() calls in your code
                    └────────┬────────┘
                             │
-                   Injects: import "virtual:lvt/en/dashboard.json"
+                   Injects: import "virtual:lvt/dashboard"
                             │
                             ▼
                    ┌─────────────────┐
@@ -149,6 +156,10 @@ translations({
 
   // Default locale for the transform
   defaultLocale: "en",
+
+  // Optional: override auto-detected tooling
+  packageManager: "bun",
+  runtime: "bun",
 
   // CDN URL for runtime overrides (optional)
   cdnUrl: "https://cdn.example.com/translations",
@@ -317,6 +328,8 @@ The package includes a CLI for project setup, migration, and diagnostics.
 
 ```bash
 npx laravel-vite-translations <command>
+# or
+bunx laravel-vite-translations <command>
 ```
 
 ### `init`
@@ -325,6 +338,8 @@ Scaffolds the plugin into your project:
 
 ```bash
 npx laravel-vite-translations init
+# or
+bunx laravel-vite-translations init
 ```
 
 - Detects your framework (React/Vue/Svelte) and lang directory
@@ -332,7 +347,9 @@ npx laravel-vite-translations init
 - Generates a runtime loader at `resources/js/lang/index.ts`
 - Prompts for locale and options interactively
 
-Options: `--locale <locale>`, `--framework <react|vue|svelte>`, `--lang-path <path>`, `--no-codemod`
+Options: `--locale <locale>`, `--framework <react|vue|svelte>`, `--lang-path <path>`, `--package-manager <auto|bun|pnpm|npm|yarn>`, `--runtime <auto|bun|node>`, `--no-codemod`
+
+`init` auto-detects package manager and runtime from `package.json.packageManager`, lockfiles, the active user agent, and Bun runtime signals. Manual overrides take priority.
 
 ### `codemod`
 
@@ -340,6 +357,8 @@ Migrates existing `__()` and `trans()` calls to `t()`:
 
 ```bash
 npx laravel-vite-translations codemod
+# or
+bunx laravel-vite-translations codemod
 ```
 
 ```diff
@@ -357,6 +376,8 @@ Diagnoses translation issues across your project:
 
 ```bash
 npx laravel-vite-translations doctor
+# or
+bunx laravel-vite-translations doctor
 ```
 
 Reports:
@@ -375,6 +396,8 @@ Flat config compatible (ESLint v9+).
 
 ```bash
 npm install eslint --save-dev
+# or
+bun add -d eslint
 ```
 
 ```js

@@ -1,18 +1,18 @@
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { resolve, relative } from "node:path";
-import { readFileSync } from "node:fs";
 import { scanWorkspace } from "../workspace/workspaceScanner.js";
 import { generateTranslations } from "../generator/translationGenerator.js";
 import { transformCode } from "./transform.js";
 import { TransformCacheManager } from "../cache/transformCache.js";
 import { logger } from "../utils/logger.js";
+import { resolveToolingEnvironment } from "../utils/packageManager.js";
 import type { PluginOptions } from "../types/index.js";
-import type { Plugin, ViteDevServer } from "vite";
+import type { Plugin, PluginOption, ViteDevServer } from "vite";
 
 const VIRTUAL_PREFIX = "virtual:lvt/";
 const RESOLVED_PREFIX = "\0virtual:lvt/";
 
-export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
-  const defaultLocale = options.defaultLocale || "en";
+export function translationsPlugin(options: PluginOptions = {}): PluginOption {
   const outputDir = options.outputDir || "resources/js/lang/translations";
   let root: string;
   let cache: TransformCacheManager;
@@ -24,6 +24,10 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
     configResolved(config) {
       root = config.root;
       cache = new TransformCacheManager(root);
+      const toolingEnvironment = resolveToolingEnvironment(root, options);
+      logger.debug(
+        `Resolved tooling environment: ${toolingEnvironment.packageManager}/${toolingEnvironment.runtime}`
+      );
     },
 
     async buildStart() {
@@ -68,7 +72,7 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
 
     resolveId(id) {
       if (id.startsWith(VIRTUAL_PREFIX)) {
-        return "\0" + id;
+        return "\0" + normalizeVirtualId(id);
       }
       return null;
     },
@@ -76,24 +80,34 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
     load(id) {
       if (!id.startsWith(RESOLVED_PREFIX)) return null;
 
-      // Parse: virtual:lvt/{locale}/{namespace}.json
+      // Parse: virtual:lvt/{namespace}
       const path = id.slice(RESOLVED_PREFIX.length);
-      const parts = path.replace(".json", "").split("/");
-      if (parts.length !== 2) return null;
+      const namespace = stripLegacyJsonSuffix(path);
+      if (!namespace) return null;
 
-      const [locale, namespace] = parts;
-      const jsonPath = resolve(root, outputDir, locale, `${namespace}.json`);
+      const generatedRoot = resolve(root, outputDir);
+      const locales = existsSync(generatedRoot)
+        ? readdirSync(generatedRoot, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        : [];
 
-      try {
-        const content = readFileSync(jsonPath, "utf-8");
-        return `
-          import { __registerTranslations } from "@zivex/laravel-vite-translations/runtime";
-          __registerTranslations("${namespace}", "${locale}", ${content});
-        `;
-      } catch {
-        logger.warn(`Translation file not found: ${jsonPath}`);
-        return `export default {};`;
-      }
+      const registrations = locales
+        .map((locale) => {
+          const jsonPath = resolve(generatedRoot, locale, `${namespace}.json`);
+          if (!existsSync(jsonPath)) return null;
+
+          const content = readFileSync(jsonPath, "utf-8");
+          return `__registerTranslations(${JSON.stringify(namespace)}, ${JSON.stringify(locale)}, ${content});`;
+        })
+        .filter(Boolean)
+        .join("\n");
+
+      return `
+        import { __registerTranslations } from "@zivex/laravel-vite-translations/runtime";
+        ${registrations}
+        export default {};
+      `;
     },
   };
 
@@ -115,7 +129,7 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
 
         // Re-inject imports from cache
         const imports = cached.namespaces
-          .map((ns) => `import "virtual:lvt/${defaultLocale}/${ns}.json";`)
+          .map((ns) => `import "virtual:lvt/${ns}";`)
           .join("\n");
         return {
           code: imports + "\n" + code,
@@ -123,7 +137,7 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
         };
       }
 
-      const result = transformCode(code, id, defaultLocale);
+      const result = transformCode(code, id);
 
       // Cache the result
       const namespaces = result ? extractNamespacesFromResult(result.code) : [];
@@ -143,10 +157,19 @@ export function translationsPlugin(options: PluginOptions = {}): Plugin[] {
 
 function extractNamespacesFromResult(code: string): string[] {
   const namespaces: string[] = [];
-  const regex = /import "virtual:lvt\/[^/]+\/([^.]+)\.json"/g;
+  const regex = /import "virtual:lvt\/([^"]+)"/g;
   let match;
   while ((match = regex.exec(code)) !== null) {
-    namespaces.push(match[1]);
+    namespaces.push(stripLegacyJsonSuffix(match[1]));
   }
   return namespaces;
+}
+
+function normalizeVirtualId(id: string): string {
+  if (!id.startsWith(VIRTUAL_PREFIX)) return id;
+  return `${VIRTUAL_PREFIX}${stripLegacyJsonSuffix(id.slice(VIRTUAL_PREFIX.length))}`;
+}
+
+function stripLegacyJsonSuffix(value: string): string {
+  return value.endsWith(".json") ? value.slice(0, -5) : value;
 }

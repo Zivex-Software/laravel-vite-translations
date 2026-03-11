@@ -144,6 +144,9 @@ importers:
 
   packages/vscode:
     devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.15
       '@types/vscode':
         specifier: ^1.85.0
         version: 1.110.0

@@ -1,6 +1,6 @@
 {
   "name": "@zivex/laravel-vite-translations",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Vite plugin for Laravel PHP translation files with runtime loading, namespace chunking, and framework adapters",
   "type": "module",
   "exports": {
@@ -49,7 +49,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist", "bin"],
+  "files": [
+    "dist",
+    "bin"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -57,16 +60,26 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
-    "clean": "rm -rf dist .turbo"
+    "clean": "rm -rf dist .turbo",
+    "release:npm": "npm publish",
+    "update:patch": "pnpm version patch && pnpm release:npm"
   },
   "peerDependencies": {
     "vite": ">=5.0.0"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "vue": { "optional": true },
-    "svelte": { "optional": true },
-    "eslint": { "optional": true }
+    "react": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "eslint": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@swc/core": "^1.9.0",
@@ -92,5 +105,12 @@
     "@typescript-eslint/utils": "^8.0.0"
   },
   "license": "MIT",
-  "keywords": ["vite", "laravel", "translations", "i18n", "php", "vite-plugin"]
+  "keywords": [
+    "vite",
+    "laravel",
+    "translations",
+    "i18n",
+    "php",
+    "vite-plugin"
+  ]
 }

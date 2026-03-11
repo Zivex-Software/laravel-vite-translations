@@ -1,18 +1,18 @@
-import Engine from "php-parser";
+import * as PhpParser from "php-parser";
 import { readFile } from "node:fs/promises";
 import type { TranslationRecord } from "../types/index.js";
 
-const parser = new Engine({
+const parser = new PhpParser.Engine({
   parser: { extractDoc: false },
   ast: { withPositions: false },
 });
 
 export async function parsePhpTranslationFile(filePath: string): Promise<TranslationRecord> {
   const content = await readFile(filePath, "utf-8");
-  const ast = parser.parseCode(content, filePath);
+  const ast = parser.parseCode(content, filePath) as any;
 
   // Find the return statement
-  for (const node of ast.children) {
+  for (const node of ast.children as any[]) {
     if (node.kind === "return" && node.expr) {
       return extractValue(node.expr) as TranslationRecord;
     }

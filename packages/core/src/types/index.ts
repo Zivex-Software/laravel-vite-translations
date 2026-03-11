@@ -28,6 +28,16 @@ export interface GenerationResult {
   filesWritten: number;
 }
 
+export type PackageManagerName = "bun" | "pnpm" | "npm" | "yarn";
+export type PackageManagerPreference = PackageManagerName | "auto";
+export type RuntimeName = "bun" | "node";
+export type RuntimePreference = RuntimeName | "auto";
+
+export interface ToolingEnvironment {
+  packageManager: PackageManagerName;
+  runtime: RuntimeName;
+}
+
 export interface PluginOptions {
   /** Directories to scan for translation files */
   langPaths?: string[];
@@ -43,6 +53,10 @@ export interface PluginOptions {
   typesOutputPath?: string;
   /** Additional glob patterns for translation directories */
   additionalPatterns?: string[];
+  /** Override package manager detection */
+  packageManager?: PackageManagerPreference;
+  /** Override runtime detection */
+  runtime?: RuntimePreference;
 }
 
 export interface I18nOptions {

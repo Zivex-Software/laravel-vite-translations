@@ -3,11 +3,20 @@ import { resolve, join } from "node:path";
 import prompts from "prompts";
 import chalk from "chalk";
 import { logger } from "../utils/logger.js";
+import {
+  getBinaryCommand,
+  getScriptCommand,
+  resolveToolingEnvironment,
+  type ToolingEnvironmentOptions,
+} from "../utils/packageManager.js";
+import type { PackageManagerPreference, RuntimePreference } from "../types/index.js";
 
 interface InitOptions {
   locale: string;
   framework?: string;
   langPath?: string;
+  packageManager?: PackageManagerPreference;
+  runtime?: RuntimePreference;
   codemod: boolean;
 }
 
@@ -57,23 +66,38 @@ export async function initCommand(options: InitOptions): Promise<void> {
 
   // Detect locale
   const locale = options.locale || "en";
+  const toolingEnvironment = resolveToolingEnvironment(root, {
+    packageManager: options.packageManager,
+    runtime: options.runtime,
+  });
   logger.info(`Default locale: ${chalk.bold(locale)}`);
   logger.info(`Language path: ${chalk.bold(langPath)}`);
+  logger.info(`Package manager: ${chalk.bold(toolingEnvironment.packageManager)}`);
+  logger.info(`Runtime: ${chalk.bold(toolingEnvironment.runtime)}`);
 
   // Patch vite.config.ts
-  patchViteConfig(root, framework!);
+  patchViteConfig(root, {
+    packageManager: options.packageManager,
+    runtime: options.runtime,
+  });
 
   // Generate runtime loader
   generateRuntimeLoader(root, framework!, locale);
 
   logger.success("\nInitialization complete!");
   logger.info("\nNext steps:");
-  logger.info(`  1. Run ${chalk.cyan("pnpm dev")} to start the dev server`);
+  logger.info(
+    `  1. Run ${chalk.cyan(
+      getScriptCommand(toolingEnvironment.packageManager, "dev")
+    )} to start the dev server`
+  );
   logger.info(`  2. Import translations in your components`);
 
   if (options.codemod) {
     logger.info(
-      `\n  Run ${chalk.cyan("laravel-vite-translations codemod")} to convert existing __() calls`
+      `\n  Run ${chalk.cyan(
+        getBinaryCommand(toolingEnvironment, "laravel-vite-translations", ["codemod"])
+      )} to convert existing __() calls`
     );
   }
 }
@@ -91,7 +115,7 @@ function detectFramework(root: string): string | undefined {
   return undefined;
 }
 
-function patchViteConfig(root: string, framework: string): void {
+function patchViteConfig(root: string, toolingOptions: ToolingEnvironmentOptions): void {
   const configFiles = ["vite.config.ts", "vite.config.js", "vite.config.mts"];
   let configFile: string | null = null;
 
@@ -123,11 +147,27 @@ function patchViteConfig(root: string, framework: string): void {
   // Add to plugins array
   content = content.replace(
     /plugins:\s*\[/,
-    "plugins: [\n    ...translations(),"
+    `plugins: [\n    ${buildTranslationsCall(toolingOptions)},`
   );
 
   writeFileSync(configPath, content, "utf-8");
   logger.success(`Patched ${configFile}`);
+}
+
+function buildTranslationsCall(options: ToolingEnvironmentOptions): string {
+  const properties: string[] = [];
+
+  if (options.packageManager && options.packageManager !== "auto") {
+    properties.push(`packageManager: "${options.packageManager}"`);
+  }
+
+  if (options.runtime && options.runtime !== "auto") {
+    properties.push(`runtime: "${options.runtime}"`);
+  }
+
+  return properties.length === 0
+    ? "translations()"
+    : `translations({ ${properties.join(", ")} })`;
 }
 
 function generateRuntimeLoader(root: string, framework: string, locale: string): void {

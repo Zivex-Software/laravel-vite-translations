@@ -13,23 +13,19 @@ const EXTENSIONS: Record<string, "ecmascript" | "typescript"> = {
 
 export function transformCode(
   code: string,
-  id: string,
-  locale: string
+  id: string
 ): TransformResult | null {
   // Extract script content from SFC files
   let scriptContent = code;
-  let scriptOffset = 0;
 
   if (id.endsWith(".vue")) {
     const match = code.match(/<script[^>]*>([\s\S]*?)<\/script>/);
     if (!match) return null;
     scriptContent = match[1];
-    scriptOffset = code.indexOf(match[1]);
   } else if (id.endsWith(".svelte")) {
     const match = code.match(/<script[^>]*>([\s\S]*?)<\/script>/);
     if (!match) return null;
     scriptContent = match[1];
-    scriptOffset = code.indexOf(match[1]);
   }
 
   // Determine syntax
@@ -41,11 +37,10 @@ export function transformCode(
 
   let ast: any;
   try {
-    ast = parseSync(scriptContent, {
-      syntax: syntax === "typescript"
-        ? { syntax: "typescript", tsx: isJsx }
-        : { syntax: "ecmascript", jsx: isJsx },
-    });
+    ast =
+      syntax === "typescript"
+        ? parseSync(scriptContent, { syntax: "typescript", tsx: isJsx })
+        : parseSync(scriptContent, { syntax: "ecmascript", jsx: isJsx });
   } catch {
     return null;
   }
@@ -74,14 +69,14 @@ export function transformCode(
   // Inject virtual imports using magic-string
   const s = new MagicString(code);
   const imports = [...namespaces]
-    .map((ns) => `import "virtual:lvt/${locale}/${ns}.json";`)
+    .map((ns) => `import "virtual:lvt/${ns}";`)
     .join("\n");
 
   s.prepend(imports + "\n");
 
   return {
     code: s.toString(),
-    map: s.generateMap({ hires: true }),
+    map: s.generateMap({ hires: true }) as any,
   };
 }
 

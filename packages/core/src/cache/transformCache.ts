@@ -4,6 +4,7 @@ import { hashContent } from "../utils/hash.js";
 import type { TransformCache, CacheEntry } from "../types/index.js";
 
 const CACHE_FILE = ".vite/translations-cache.json";
+const CACHE_VERSION = "3";
 
 export class TransformCacheManager {
   private cache: TransformCache = {};
@@ -42,7 +43,7 @@ export class TransformCacheManager {
     const entry = this.cache[filePath];
     if (!entry) return null;
 
-    const hash = hashContent(sourceCode);
+    const hash = this.hashSource(sourceCode);
     if (entry.hash !== hash) return null;
 
     return entry;
@@ -50,7 +51,7 @@ export class TransformCacheManager {
 
   set(filePath: string, sourceCode: string, namespaces: string[]): void {
     this.cache[filePath] = {
-      hash: hashContent(sourceCode),
+      hash: this.hashSource(sourceCode),
       namespaces,
       timestamp: Date.now(),
     };
@@ -62,5 +63,9 @@ export class TransformCacheManager {
 
   clear(): void {
     this.cache = {};
+  }
+
+  private hashSource(sourceCode: string): string {
+    return hashContent(`${CACHE_VERSION}:${sourceCode}`);
   }
 }
